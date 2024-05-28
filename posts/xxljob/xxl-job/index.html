@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="theme-color" content="#494f5c">
+<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="">
+<meta itemprop="description" content="XXL-JOB 调度中心 提供管理端功能。
+提供调度功能。
+不承担业务逻辑。
+调度过程 以“手动执行一次”为例。
+任务查询 xxl_job_info表。
+执行一次 参数
+任务id
+执行类型枚举（例，手动执行）
+失败重试次数
+分片参数
+其它业务参数
+执行器地址集合
+代码顺序层级
+// 代码入口 JobTriggerPoolHelper.addTrigger(); // 上面这个方法内部，调用 XxlJobTrigger.trigger(); // 上面这个方法内部，调用 XxlJobScheduler.getExecutorBiz(address).run(triggerParam)； Java类api JobTriggerPoolHelper fastTriggerPool、slowTriggerPool 线程池，数据类型：java.util.concurrent.ThreadPoolExecutor。
+jobTimeoutCountMap 任务超时记录，数据类型：ConcurrentMap&lt;Integer, AtomicInteger&gt;；key-jobId，value-“同一个分钟数”内的超时次数。
+“同一个分钟数”，例：
+2023-10-01 12:24:53与2023-10-01 12:24:55，属于“同一个分钟数”。
+2023-10-01 12:24:53与2023-10-01 12:32:55，则不属于“同一个分钟数”。
+Java层面，使用System.currentTimeMillis() / 60000计算（同一个分钟数内的毫秒值，得到的值是一样的）。
+addTrigger() 根据超时次数，获取线程池。
+默认为fastTriggerPool，假如该任务总超时次数，达到限制次数，则取slowTriggerPool。
+执行线程池，在线程中调用XxlJobTrigger.trigger();
+判断当前分钟数是否变化，变化则清空jobTimeoutCountMap。
+任务执行时间超过一定值，则认为任务执行超时，累加jobTimeoutCountMap中该任务的超时次数。
+XxlJobTrigger trigger() 处理任务信息
+查询任务。
+确认失败重试次数：参数传入则取之，反之取数据库中的值。
+处理执行器信息
+查询执行器。
+确认地址集合：参数传入则取之，反之取数据库中的值。
+分片参数（index/total）处理
+index：当前分片序号(从0开始)，执行器集群列表中当前执行器的序号。 total：总分片数，执行器集群的总机器数量。
+执行processTrigger()，若满足条件：任务执行策略为“分片广播” - 有效的分片参数 - 有效的地址集合，则分片执行。
+​ $\textcolor{red}{TODO：怎么实现每个执行器都执行？每个执行器执行一部分任务？} $
+processTrigger() 保存日志JobLog。">
+
+<meta itemprop="wordCount" content="257">
+<meta itemprop="keywords" content="" /><meta property="og:title" content="" />
+<meta property="og:description" content="XXL-JOB 调度中心 提供管理端功能。
+提供调度功能。
+不承担业务逻辑。
+调度过程 以“手动执行一次”为例。
+任务查询 xxl_job_info表。
+执行一次 参数
+任务id
+执行类型枚举（例，手动执行）
+失败重试次数
+分片参数
+其它业务参数
+执行器地址集合
+代码顺序层级
+// 代码入口 JobTriggerPoolHelper.addTrigger(); // 上面这个方法内部，调用 XxlJobTrigger.trigger(); // 上面这个方法内部，调用 XxlJobScheduler.getExecutorBiz(address).run(triggerParam)； Java类api JobTriggerPoolHelper fastTriggerPool、slowTriggerPool 线程池，数据类型：java.util.concurrent.ThreadPoolExecutor。
+jobTimeoutCountMap 任务超时记录，数据类型：ConcurrentMap&lt;Integer, AtomicInteger&gt;；key-jobId，value-“同一个分钟数”内的超时次数。
+“同一个分钟数”，例：
+2023-10-01 12:24:53与2023-10-01 12:24:55，属于“同一个分钟数”。
+2023-10-01 12:24:53与2023-10-01 12:32:55，则不属于“同一个分钟数”。
+Java层面，使用System.currentTimeMillis() / 60000计算（同一个分钟数内的毫秒值，得到的值是一样的）。
+addTrigger() 根据超时次数，获取线程池。
+默认为fastTriggerPool，假如该任务总超时次数，达到限制次数，则取slowTriggerPool。
+执行线程池，在线程中调用XxlJobTrigger.trigger();
+判断当前分钟数是否变化，变化则清空jobTimeoutCountMap。
+任务执行时间超过一定值，则认为任务执行超时，累加jobTimeoutCountMap中该任务的超时次数。
+XxlJobTrigger trigger() 处理任务信息
+查询任务。
+确认失败重试次数：参数传入则取之，反之取数据库中的值。
+处理执行器信息
+查询执行器。
+确认地址集合：参数传入则取之，反之取数据库中的值。
+分片参数（index/total）处理
+index：当前分片序号(从0开始)，执行器集群列表中当前执行器的序号。 total：总分片数，执行器集群的总机器数量。
+执行processTrigger()，若满足条件：任务执行策略为“分片广播” - 有效的分片参数 - 有效的地址集合，则分片执行。
+​ $\textcolor{red}{TODO：怎么实现每个执行器都执行？每个执行器执行一部分任务？} $
+processTrigger() 保存日志JobLog。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://wsc17.github.io/posts/xxljob/xxl-job/" /><meta property="article:section" content="posts" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content=""/>
+<meta name="twitter:description" content="XXL-JOB 调度中心 提供管理端功能。
+提供调度功能。
+不承担业务逻辑。
+调度过程 以“手动执行一次”为例。
+任务查询 xxl_job_info表。
+执行一次 参数
+任务id
+执行类型枚举（例，手动执行）
+失败重试次数
+分片参数
+其它业务参数
+执行器地址集合
+代码顺序层级
+// 代码入口 JobTriggerPoolHelper.addTrigger(); // 上面这个方法内部，调用 XxlJobTrigger.trigger(); // 上面这个方法内部，调用 XxlJobScheduler.getExecutorBiz(address).run(triggerParam)； Java类api JobTriggerPoolHelper fastTriggerPool、slowTriggerPool 线程池，数据类型：java.util.concurrent.ThreadPoolExecutor。
+jobTimeoutCountMap 任务超时记录，数据类型：ConcurrentMap&lt;Integer, AtomicInteger&gt;；key-jobId，value-“同一个分钟数”内的超时次数。
+“同一个分钟数”，例：
+2023-10-01 12:24:53与2023-10-01 12:24:55，属于“同一个分钟数”。
+2023-10-01 12:24:53与2023-10-01 12:32:55，则不属于“同一个分钟数”。
+Java层面，使用System.currentTimeMillis() / 60000计算（同一个分钟数内的毫秒值，得到的值是一样的）。
+addTrigger() 根据超时次数，获取线程池。
+默认为fastTriggerPool，假如该任务总超时次数，达到限制次数，则取slowTriggerPool。
+执行线程池，在线程中调用XxlJobTrigger.trigger();
+判断当前分钟数是否变化，变化则清空jobTimeoutCountMap。
+任务执行时间超过一定值，则认为任务执行超时，累加jobTimeoutCountMap中该任务的超时次数。
+XxlJobTrigger trigger() 处理任务信息
+查询任务。
+确认失败重试次数：参数传入则取之，反之取数据库中的值。
+处理执行器信息
+查询执行器。
+确认地址集合：参数传入则取之，反之取数据库中的值。
+分片参数（index/total）处理
+index：当前分片序号(从0开始)，执行器集群列表中当前执行器的序号。 total：总分片数，执行器集群的总机器数量。
+执行processTrigger()，若满足条件：任务执行策略为“分片广播” - 有效的分片参数 - 有效的地址集合，则分片执行。
+​ $\textcolor{red}{TODO：怎么实现每个执行器都执行？每个执行器执行一部分任务？} $
+processTrigger() 保存日志JobLog。"/>
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+<link rel="shortcut icon" href="/favicon.ico"><title></title>
+<link rel="stylesheet" href="https://wsc17.github.io/css/style.min.2372f32ce2a23df002ef53bd50f891aa44160be19fe56daf9df576cf9b1acce1.css" integrity="sha256-I3LzLOKiPfAC71O9UPiRqkQWC+Gf5W2vnfV2z5sazOE=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://wsc17.github.io">Wushuchao | Blog</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+				<a href="https://wsc17.github.io/posts/">文章</a>
+				<a href="https://wsc17.github.io/about-hugo/">About</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-social hide-in-mobile"><a href="https://gitee.com/wuzuchao/wuzuchao" target="_blank" rel="noopener me" title="Gitee"><svg t="1700445689956" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11872" width="22" height="22"><path d="M978.467 409.614H455.101v0.011a45.51 45.51 0 0 0-45.51 45.499l-0.046 113.775a45.51 45.51 0 0 0 45.51 45.521l318.617-0.01a45.51 45.51 0 0 1 45.51 45.51v22.754c0 75.4-61.132 136.53-136.53 136.53h-432.38a45.51 45.51 0 0 1-45.51-45.51V341.35h-0.012c0-75.4 61.12-136.53 136.53-136.53h637.062v-0.024a45.51 45.51 0 0 0 45.51-45.487l0.102-113.775h0.023A45.51 45.51 0 0 0 978.467 0L341.326 0.023C152.823 0.023 0 152.846 0 341.349v637.14A45.51 45.51 0 0 0 45.51 1024h671.274c169.662 0 307.193-137.532 307.193-307.193V455.124a45.51 45.51 0 0 0-45.51-45.51z" fill="#ffffff" p-id="11873" data-spm-anchor-id="a313x.search_index.0.i57.70183a81pvKA1A" class="selected"></path></svg></a></span><button id="share-btn" class="hdr-btn" title="Share"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></button>
+ 
+<div id="share-links" class="animated fast">
+    
+    
+    
+    
+    <ul>
+        <li>
+            <a href="https://twitter.com/intent/tweet?hashtags=hermit2&amp;url=https%3a%2f%2fwsc17.github.io%2fposts%2fxxljob%2fxxl-job%2f&amp;text=" target="_blank" rel="noopener" aria-label="Share on X"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path class="st0" d="m21.3 21.1 -11.4 -18.2h-7.2l11.4 18.2zm-18.6 0 7.2 -6.6m4.2 -5 7.2 -6.6"/></svg></a>
+        </li>
+        <li>
+            <a href="https://facebook.com/sharer/sharer.php?u=https%3a%2f%2fwsc17.github.io%2fposts%2fxxljob%2fxxl-job%2f" target="_blank" rel="noopener" aria-label="Share on Facebook"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg></a>
+        </li>
+        <li>
+            <a href="mailto:?subject=&amp;body=https%3a%2f%2fwsc17.github.io%2fposts%2fxxljob%2fxxl-job%2f" target="_self" rel="noopener" aria-label="Share on Email"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a>
+        </li>
+        <li>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fwsc17.github.io%2fposts%2fxxljob%2fxxl-job%2f&amp;source=https%3a%2f%2fwsc17.github.io&amp;title=&amp;summary=%2c%20by%20wushuchao%0a%0a%3cnil%3e%0a" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+        </li>
+    </ul>
+</div><button id="menu-btn" class="hdr-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://wsc17.github.io/posts/">文章</a></li>
+			<li><a href="https://wsc17.github.io/about-hugo/">About</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner animated fadeIn faster"><article class="thin">
+			<header class="post-header">
+				<div class="post-meta"><span>Jan 1, 0001</span></div>
+				<h1></h1>
+			</header>
+			<div class="post-info"><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-feather"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"></path><line x1="16" y1="8" x2="2" y2="22"></line><line x1="17.5" y1="15" x2="9" y2="15"></line></svg><a href="/about-hugo/" target="_blank">wushuchao</a></p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>257 Words
+    … ⏲ Reading Time:
+    
+    
+    
+    1 Minute, 10 Seconds</p>
+<p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>0001-01-01 08:00 &#43;0800</p></div>
+			<hr class="post-end">
+			<div class="content">
+				<h1 id="xxl-job">XXL-JOB<a href="#xxl-job" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<h2 id="调度中心">调度中心<a href="#调度中心" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<ul>
+<li>
+<p>提供管理端功能。</p>
+</li>
+<li>
+<p>提供调度功能。</p>
+</li>
+<li>
+<p>不承担业务逻辑。</p>
+</li>
+</ul>
+<h3 id="调度过程">调度过程<a href="#调度过程" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>以“手动执行一次”为例。</p>
+<p><img src="D:%5CnoteTool%5CNoteWorkspace%5CMyJavaNote%5Cimage%5Ca1c13be1aa704f76d2dcd1a6ca0af745.png" alt=""></p>
+<h4 id="任务查询">任务查询<a href="#任务查询" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<p>xxl_job_info表。</p>
+<h4 id="执行一次">执行一次<a href="#执行一次" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<ol>
+<li>
+<p>参数</p>
+<ul>
+<li>
+<p>任务id</p>
+</li>
+<li>
+<p>执行类型枚举（例，手动执行）</p>
+</li>
+<li>
+<p>失败重试次数</p>
+</li>
+<li>
+<p>分片参数</p>
+</li>
+<li>
+<p>其它业务参数</p>
+</li>
+<li>
+<p>执行器地址集合</p>
+</li>
+</ul>
+</li>
+<li>
+<p>代码顺序层级</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">// 代码入口</span>
+</span></span><span style="display:flex;"><span>JobTriggerPoolHelper.<span style="color:#a6e22e">addTrigger</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 上面这个方法内部，调用</span>
+</span></span><span style="display:flex;"><span>XxlJobTrigger.<span style="color:#a6e22e">trigger</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 上面这个方法内部，调用</span>
+</span></span><span style="display:flex;"><span>XxlJobScheduler.<span style="color:#a6e22e">getExecutorBiz</span>(address).<span style="color:#a6e22e">run</span>(triggerParam)<span style="color:#960050;background-color:#1e0010">；</span>
+</span></span></code></pre></div></li>
+</ol>
+<h3 id="java类api">Java类api<a href="#java类api" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<h4 id="jobtriggerpoolhelper">JobTriggerPoolHelper<a href="#jobtriggerpoolhelper" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<h5 id="fasttriggerpoolslowtriggerpool">fastTriggerPool、slowTriggerPool<a href="#fasttriggerpoolslowtriggerpool" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h5>
+<p>线程池，数据类型：java.util.concurrent.ThreadPoolExecutor。</p>
+<h5 id="jobtimeoutcountmap">jobTimeoutCountMap<a href="#jobtimeoutcountmap" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h5>
+<ol>
+<li>
+<p>任务超时记录，数据类型：ConcurrentMap&lt;Integer, AtomicInteger&gt;；key-jobId，value-“同一个分钟数”内的超时次数。</p>
+</li>
+<li>
+<p>“同一个分钟数”，例：</p>
+<p>2023-10-01 12:24:53与2023-10-01 12:24:55，属于“同一个分钟数”。</p>
+<p>2023-10-01 12:24:53与2023-10-01 12:32:55，则不属于“同一个分钟数”。</p>
+<p>Java层面，使用System.currentTimeMillis() / 60000计算（同一个分钟数内的毫秒值，得到的值是一样的）。</p>
+</li>
+</ol>
+<h5 id="addtrigger">addTrigger()<a href="#addtrigger" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h5>
+<ol>
+<li>
+<p>根据超时次数，获取线程池。</p>
+<p>默认为fastTriggerPool，假如该任务总超时次数，达到限制次数，则取slowTriggerPool。</p>
+</li>
+<li>
+<p>执行线程池，在线程中调用XxlJobTrigger.trigger();</p>
+</li>
+<li>
+<p>判断当前分钟数是否变化，变化则清空jobTimeoutCountMap。</p>
+</li>
+<li>
+<p>任务执行时间超过一定值，则认为任务执行超时，累加jobTimeoutCountMap中该任务的超时次数。</p>
+</li>
+</ol>
+<h4 id="xxljobtrigger">XxlJobTrigger<a href="#xxljobtrigger" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<h5 id="trigger">trigger()<a href="#trigger" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h5>
+<ol>
+<li>
+<p>处理任务信息</p>
+<p>查询任务。</p>
+<p>确认失败重试次数：参数传入则取之，反之取数据库中的值。</p>
+</li>
+<li>
+<p>处理执行器信息</p>
+<p>查询执行器。</p>
+<p>确认地址集合：参数传入则取之，反之取数据库中的值。</p>
+</li>
+<li>
+<p>分片参数（index/total）处理</p>
+<p>index：当前分片序号(从0开始)，执行器集群列表中当前执行器的序号。
+total：总分片数，执行器集群的总机器数量。</p>
+</li>
+<li>
+<p>执行processTrigger()，若满足条件：任务执行策略为“分片广播” - 有效的分片参数 - 有效的地址集合，则分片执行。</p>
+</li>
+</ol>
+<p>​    $\textcolor{red}{TODO：怎么实现每个执行器都执行？每个执行器执行一部分任务？} $</p>
+<h5 id="processtrigger">processTrigger()<a href="#processtrigger" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h5>
+<ol>
+<li>
+<p>保存日志JobLog。</p>
+</li>
+<li>
+<p>初始化执行参数TriggerParam。</p>
+</li>
+<li>
+<p>获取执行器地址</p>
+<p>为空将报错，调度结束。</p>
+<p>根据路由策略获取地址：</p>
+<p>​    分片广播时，根据分片参数index获取地址。</p>
+<p>​    其它策略时，调用ExecutorRouter.route()获取地址：</p>
+<p>​        ExecutorRouter，路由抽象类；每种路由策略都有一个实现类，每个实现类获取路由方式都不同。</p>
+<p>​        例，【第一个】，此策略直接获取执行器地址集合的第一个。</p>
+<p>​        $\textcolor{red}{TODO：看一下其它路由策略的地址获取逻辑？} $</p>
+</li>
+<li>
+<p>调用：XxlJobScheduler.getExecutorBiz(address).run(triggerParam)。</p>
+</li>
+<li>
+<p>更新日志JobLog。</p>
+</li>
+</ol>
+<h4 id="xxljobscheduler">XxlJobScheduler<a href="#xxljobscheduler" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<h5 id="executorbizrepository">executorBizRepository<a href="#executorbizrepository" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h5>
+<ol>
+<li>数据类型：ConcurrentMap&lt;String, ExecutorBiz&gt; executorBizRepository；key - 地址。</li>
+<li>这个集合初始化时没有实际数据，后续每执行一次调度，才会新增一条数据进去。</li>
+</ol>
+<h5 id="getexecutorbiz">getExecutorBiz()<a href="#getexecutorbiz" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h5>
+<p>根据地址，从executorBizRepository中获取ExecutorBiz实现类：ExecutorBizClient。</p>
+<p>map中有则直接获取，没有则创建对象。</p>
+<h4 id="executorbizclient">ExecutorBizClient<a href="#executorbizclient" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<h5 id="run">run()<a href="#run" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h5>
+<p>调用XxlJobRemotingUtil.postBody()发送http请求，请求地址为传入的address参数，加上 /run。</p>
+<h2 id="执行器">执行器<a href="#执行器" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>接收调度中心调度请求，执行业务逻辑。</p>
+<h3 id="xxljobconfig">XxlJobConfig<a href="#xxljobconfig" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ol>
+<li>路径：com.xxl.job.executor.core.config（xxl-job-executor-samples模块）。</li>
+<li>使用了@Configuration注解。</li>
+<li>获取配置文件数据，并使用这些数据，来初始化XxlJobSpringExecutor。</li>
+</ol>
+<h3 id="xxljobspringexecutor">XxlJobSpringExecutor<a href="#xxljobspringexecutor" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ol>
+<li>
+<p>路径：com.xxl.job.core.executor.impl（xxl-job-core模块）。</p>
+</li>
+<li>
+<p>执行器注册：实现了SmartInitializingSingleton，在初始化完成后会触发调用afterSingletonsInstantiated()方法，其内调用了父类的start()方法，触发注册：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">XxlJobSpringExecutor</span> <span style="color:#66d9ef">extends</span> XxlJobExecutor <span style="color:#66d9ef">implements</span> ApplicationContextAware, SmartInitializingSingleton, DisposableBean {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> Logger logger <span style="color:#f92672">=</span> LoggerFactory.<span style="color:#a6e22e">getLogger</span>(XxlJobSpringExecutor.<span style="color:#a6e22e">class</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// start</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">afterSingletonsInstantiated</span>() {
+</span></span><span style="display:flex;"><span>        initJobHandlerMethodRepository(applicationContext);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// refresh GlueFactory</span>
+</span></span><span style="display:flex;"><span>        GlueFactory.<span style="color:#a6e22e">refreshInstance</span>(1);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// super start</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">start</span>();
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">catch</span> (Exception e) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException(e);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div></li>
+<li>
+<p>初始化任务执行器：initJobHandlerMethodRepository(applicationContext);</p>
+<ul>
+<li>找到有@XxlJob注解修饰的方法。</li>
+<li>调用父类方法：XxlJobExecutor.registJobHandler(xxlJob, bean, executeMethod)。</li>
+</ul>
+</li>
+</ol>
+<h3 id="xxljobexecutor">XxlJobExecutor<a href="#xxljobexecutor" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ol>
+<li>路径：com.xxl.job.core.executor（xxl-job-core模块）。</li>
+</ol>
+<h4 id="jobhandlerrepository">jobHandlerRepository<a href="#jobhandlerrepository" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<ol>
+<li>数据类型：ConcurrentMap&lt;String, IJobHandler&gt; jobHandlerRepository。</li>
+<li>用来保存任务执行器，key：@XxlJob(&ldquo;xxx&rdquo;)注解的中值xxx。</li>
+</ol>
+<h4 id="registjobhandler">registJobHandler()<a href="#registjobhandler" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<ol>
+<li>方法定义：registJobHandler(XxlJob xxlJob, Object bean, Method executeMethod)。</li>
+<li>方法的作用，初始化任务执行器：获取name，创建一个任务执行器（IJobHandler的子类MethodJobHandler），保存到jobHandlerRepository。</li>
+</ol>
+<h4 id="start">start()<a href="#start" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<ol>
+<li>
+<p>initAdminBizList(adminAddresses, accessToken)，初始化执行器客户端：</p>
+<p>根据执行器地址创建执行器客户端，保存到客户端集合，关键代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> List<span style="color:#f92672">&lt;</span>AdminBiz<span style="color:#f92672">&gt;</span> adminBizList;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>AdminBiz adminBiz <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> AdminBizClient(address.<span style="color:#a6e22e">trim</span>(), accessToken);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>adminBizList.<span style="color:#a6e22e">add</span>(adminBiz);
+</span></span></code></pre></div></li>
+<li>
+<p>initEmbedServer()</p>
+<ul>
+<li>
+<p>创建netty服务端：com.xxl.job.core.server.EmbedServer。</p>
+</li>
+<li>
+<p>EmbedServer.start()，其中一个步骤：startRegistry(appname, address)，就是发送请求，向注册中心注册执行器：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> com.xxl.job.core.biz.client;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AdminBizClient</span> <span style="color:#66d9ef">implements</span> AdminBiz {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> ReturnT<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">registry</span>(RegistryParam registryParam) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> XxlJobRemotingUtil.<span style="color:#a6e22e">postBody</span>(
+</span></span><span style="display:flex;"><span>            addressUrl <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;api/registry&#34;</span>, accessToken, timeout, registryParam, String.<span style="color:#a6e22e">class</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+</ul>
+</li>
+</ol>
+<h3 id="executorbizimpl">ExecutorBizImpl<a href="#executorbizimpl" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ol>
+<li>路径：com.xxl.job.core.biz.impl。</li>
+</ol>
+<h3 id="jobthread">JobThread<a href="#jobthread" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ol>
+<li>路径：com.xxl.job.core.thread。</li>
+</ol>
+<h2 id="根据cron表达式执行">根据cron表达式执行<a href="#根据cron表达式执行" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>参考：https://blog.csdn.net/ksdhfkajsdfeu/article/details/131699243</p>
+<h2 id="相关工具">相关工具<a href="#相关工具" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<h3 id="java文本格式化">Java文本格式化<a href="#java文本格式化" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<ol>
+<li>
+<p>java.text.MessageFormat，在文本中预置形式参数占位，然后传入实际参数替换</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">// 形式参数占位：使用大括号加下标</span>
+</span></span><span style="display:flex;"><span>String s <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hell{0} worl{1}&#34;</span>;
+</span></span><span style="display:flex;"><span>Object<span style="color:#f92672">[]</span> arr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Object<span style="color:#f92672">[]</span> {<span style="color:#e6db74">&#34;o&#34;</span>, <span style="color:#e6db74">&#34;d&#34;</span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>String format <span style="color:#f92672">=</span> MessageFormat.<span style="color:#a6e22e">format</span>(s, arr);
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(format); <span style="color:#75715e">// hello world</span>
+</span></span></code></pre></div></li>
+</ol>
+<h3 id="netty">Netty<a href="#netty" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>&hellip;&hellip;</p>
+<h3 id="linkedblockingqueue">LinkedBlockingQueue<a href="#linkedblockingqueue" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>&hellip;&hellip;</p>
+
+			</div>
+
+		</article>
+		<div class="post-nav thin">
+			<a class="next-post" href="https://wsc17.github.io/posts/hugo/hugo-quickstart/">
+				<span class="post-nav-label"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>&nbsp;Newer</span><br><span>Hugo 入门</span>
+			</a>
+		</div>
+		<div id="comments" class="thin">
+</div>
+	</main>
+
+<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+	<p>
+		&copy; 2024 <a href="https://wsc17.github.io">wushuchao</a>
+		&#183; blog
+		&#183; Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a>
+		&#183; Theme <a href="https://github.com/1bl4z3r/hermit-V2" target="_blank" rel="noopener">Hermit-V2</a>
+		
+		&#183; <a href="https://wsc17.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		
+	</p>
+
+</footer>
+
+	
+	<script async src="https://wsc17.github.io/js/bundle.min.038214de9d568246fadcfeb06c69349925de3209f332ec123861b6aa031d63c6.js" integrity="sha256-A4IU3p1Wgkb63P6wbGk0mSXeMgnzMuwSOGG2qgMdY8Y=" crossorigin="anonymous"></script>
+	
+	
+	
+</body>
+
+</html>

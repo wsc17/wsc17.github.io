@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Wushuchao | Blog</title>
+    <link>https://wsc17.github.io/</link>
+    <description>Recent content on Wushuchao | Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 24 May 2024 16:36:15 +0800</lastBuildDate>
+    <atom:link href="https://wsc17.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Excel导入</title>
+      <link>https://wsc17.github.io/posts/excel/excel-import/</link>
+      <pubDate>Fri, 24 May 2024 16:36:15 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/excel/excel-import/</guid>
+      <description>一、本文内容概述 介绍Excel导入时，涉及的功能要点。
+二、重点功能 （一）异步读取文件 （1）当文件内数据量较大时，如果文件读取同步执行，可能会出现文件读取时间较长，导致响应前端慢，页面长时间得不到响应而卡住，影响用户体验。
+（2）此时可将文件读取使用异步的方式来处理：服务端接收到文件后，就给前端响应（文件上传成功，数据处理中），然后另起一个线程来读取文件数据入库。
+（二）导入记录功能 （1）异步读取的方式，用户并不知道文件最终是否读取成功。
+（2）此时，需要一个导入记录的功能。服务端接收到文件后，保存一条数据到导入记录表（状态为处理中），然后给前端响应。另起一个线程读取文件，结束后更新导入记录表状态（成功、失败）。
+（3）前端做一个导入记录查询的页面，让用户查询每次导入记录的结果。
+（三）支持重复导入 （1）由于用户操作是不可控的，可能出现同一个文件被重复导入多次，造成数据重复。
+（2）服务端需要支持重复导入：数据入库前，先删除原有数据（根据业务上的数据唯一标识），然后再保存新的数据。
+（四）分批次读取和保存 （1）读取文件内容时，需要将读取出来的数据暂放至内存。如果数据量较大，可能导致内存溢出（内存空间不够大，不足以保存那么多的数据，尤其Excel容易出现）。
+（2）逐行读取：此时，可对文件内容进行逐行读取，每次只读取1行到内存（Excel逐行读取，可使用EasyExcel工具，开源的）。
+（3）分批保存：例，内存中每存了500条数据，就保存一次数据库，并清空内存，避免内存中的数据持续累积。
+（五）数据库事务 无论是重复导入，还是分批次读取保存，都涉及数据的前后操作。此时，必须合理使用数据库事务，避免数据异常、杂乱。
+三、流程示例 </description>
+    </item>
+    <item>
+      <title>实用开发工具</title>
+      <link>https://wsc17.github.io/posts/tool/develop-tool/</link>
+      <pubDate>Mon, 20 Nov 2023 14:06:41 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/tool/develop-tool/</guid>
+      <description>实用开发工具 Java项目框架 一般的Java项目，都会有一些基础功能。例，认证鉴权、用户管理、角色管理、菜单管理。
+如果每开发一个Java项目，都去重复的开发这些功能，就会造成大量的重复劳动。
+可以使用一些开源的框架，其中已经有了很多基础的功能实现，开发者只需关注业务即可。
+Guns Gitee地址：https://gitee.com/stylefeng/guns。 RuoYi Gitee地址：https://gitee.com/y_project/RuoYi。 likeadmin Gitee地址：https://gitee.com/likeadmin/likeadmin_java。 ruoyi-vue-pro Gitee地址：https://gitee.com/zhijiantianya/ruoyi-vue-pro。 Excel工具 读取excel时，内存溢出是经常会出现的，可以使用一些框架来避免。
+easyExcel Gitee地址：https://gitee.com/easyexcel/easyexcel。 微信开发 当进行微信开发时，需要进行一些微信接口的对接。
+使用封装好的框架，可以极大方便接口对接。
+WxJava Gitee地址：https://gitee.com/binary/weixin-java-tools。 Java工具包 使用封装好的工具包，可以避免开发者去编写各种各样的utils。
+hutool 官网：https://hutool.cn/。
+Java开发工具集，对普通Java开发者，几乎涵盖了90%的工具类封装。
+（用了hutool，感觉Java开发变成了面向hutool编程）。
+代码版本管理 TortoiseSVN，方便可视化使用svn。
+sourcetree，方便可视化使用git。
+远程桌面 Finalshell，开源。 </description>
+    </item>
+    <item>
+      <title>About Hugo</title>
+      <link>https://wsc17.github.io/about-hugo/</link>
+      <pubDate>Mon, 20 Nov 2023 00:00:00 +0000</pubDate>
+      <guid>https://wsc17.github.io/about-hugo/</guid>
+      <description>Hugo是由Go语言实现的静态网站生成器。
+The world’s fastest framework for building websites。
+官网：https://gohugo.io/。</description>
+    </item>
+    <item>
+      <title>SpringBoot 小Tips</title>
+      <link>https://wsc17.github.io/posts/springboot/spring-boot-tips/</link>
+      <pubDate>Thu, 16 Nov 2023 17:45:15 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/springboot/spring-boot-tips/</guid>
+      <description>SpringBoot Tips 多maven模块项目下，全局异常拦截（使用@RestControllerAdvice注解）不生效
+方法一：保证全局处理类，与应用启动类（@SpringBootApplication标识的类），位于同级包下、或者其子包下。
+方法二：在项目启动类注解添加包扫描路径，例：
+@SpringBootApplication(scanBasePackages=&amp;#34;com.xxx.xxx&amp;#34;) 在Controller中重定向
+类上使用@Controller 注解时
+return &amp;#34;redirect:&amp;#34; + xxx; 类上使用@RestController注解时
+response.sendRedirect(&amp;#34;xxx&amp;#34;); 事务失效的场景（仅列举常见的情况）
+方法必须是public修饰，事务才生效。
+final修饰的方法，事务无效。
+static修饰的方法，事务无效。
+在某个类中的方法（无事务）中，调用该类的另一个方法（有事务），会导致事务失效。
+某个类没有被spring管理，在该类中使用事务无效。
+在方法中创建一个新的线程去执行事务方法，无效（这样会导致两个方法不在同一个线程中，获取到的数据库连接不一样，从而是两个不同的事务）。
+代码中把异常吃了，然后又不抛出来，事务也不会回滚（相当于没有发生异常）。
+rollbackFor参数设置的异常范围过小（例，业务自定义的BusinessException等）。</description>
+    </item>
+    <item>
+      <title>Git 简单命令</title>
+      <link>https://wsc17.github.io/posts/git/git-simple/</link>
+      <pubDate>Thu, 16 Nov 2023 17:16:25 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/git/git-simple/</guid>
+      <description>Git命令简单使用 本文仅介绍几个最简单的Git命令使用。
+对普通开发工程师，更多复杂的命令，建议使用可视化工具（例，sourcetree）来处理。
+对版本控制工具的使用，最好保持其最基础的使用，尽量不要太过复杂的操作，防止事故。
+本地仓库 名称和邮箱
+// 配置用户git config --global user.name xxx// 配置邮箱git config --global user.email xxx// 查看用户git config user.name// 查看邮箱git config user.email 仓库
+// 在本地创建一个git仓库// 纯本地操作，无关远程仓库git init 远程仓库 关联远程仓库
+// 本地创建了仓库的情况下，将本地仓库与远程仓库关联git remote add origin https://xxxx/xxx.git// 查看远程库信息git remote -v// 删除本地仓库与远程仓库的关联git remote rm origin 克隆远程仓库
+// 此操作不需要在本地创建本地仓库git clone xxx </description>
+    </item>
+    <item>
+      <title>TXT 文件读取</title>
+      <link>https://wsc17.github.io/posts/txt/txt-read/</link>
+      <pubDate>Thu, 16 Nov 2023 16:00:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/txt/txt-read/</guid>
+      <description>TXT 文件读取 文本文件中，有特殊符号时，可尝试将其复制到Java字符串中，或许会有结果，例：
+// 文本文件，使用vscode或其它编辑器打开时，存在这个符号  // 将其复制到Java的字符串中，会变成 \u0001 // 后续可以尝试使用Java中的形式来处理数据，比如：以其为分割符，来分割字符串 String s = &amp;#34;\u0001&amp;#34;; </description>
+    </item>
+    <item>
+      <title>Mysql 简易分布式锁</title>
+      <link>https://wsc17.github.io/posts/mysql/mysql-simple-lock/</link>
+      <pubDate>Thu, 16 Nov 2023 14:39:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/mysql/mysql-simple-lock/</guid>
+      <description>一、本文内容概述 介绍锁。
+锁的实现之：Mysql分布式锁。
+二、为什么需要锁 为什么需要用到锁，即：锁的作用是什么？可以用锁来解决什么问题？什么情况下需要用到锁？
+（一）锁的使用场景 列举几个实际开发中需要用到锁的场景。
+1.避免某个业务重复执行 例，系统A使用定时任务的方式，向系统B发送通知，并更新状态：
+如果定时任务执行频率较快，且系统A业务执行较慢，就会出现：对于同一条通知，第一次发送尚未完成（状态还没有更新为已发送），第二次发送又开始了，导致同一条通知重复发送2次到系统B。
+为了避免这种情况，可以在系统A对这个业务进行加锁，实现：第一次发送尚未完成时，如果第二次发送也触发了，则第二次发送需要等待，等第一次发送完成后，第二次再继续执行：
+2.避免商品超卖 例，某商品库存只有10件，但有很多人同时来抢购商品，就可能会出现超卖（实际卖出的商品超过10件）。
+此时通过加锁，保证：在一次购买结束后（库存扣减完成），再处理下一次购买：
+三、什么是锁 那么锁到底是什么？
+（一）锁是一种方法论 锁的本质，就是当资源发生竞争（同一个资源被多个对象竞争使用）时，把竞争变成排队执行，避免资源在同一时间内被多方同时使用。
+锁，并不是一个具象的东西，它只是一种思想，一种解决问题的思路。
+锁是一种方法论，需要开发者根据这个方法论的指导，去具体的实践，去实现锁。
+（二）名词解释 1.加锁 （1）通过某种具体的方式（例，使用synchronized关键字修饰Java方法），使并发的线程排队执行，这个过程就称为加锁（获取锁）。
+（2）线程排队执行时，每个线程都要先尝试加锁，如果加锁成功，则该线程可以继续执行。（3）反之，说明已经有其它线程获取了锁，则需要等待锁被释放。
+（4）同时只会有一个线程加锁成功。
+（5）多个线程时，哪个线程可以先加锁成功？
+有些锁的实现方式，无法设置线程加锁成功的先后（即，随机的）。
+有些锁的实现方式，可以一定程度上实现公平锁（先来后到）。
+2.解锁 （1）某个线程加锁成功，并且执行结束后，需要解锁（释放锁）。
+（2）此时正在排队的线程就可以尝试加锁，并且会有一个线程加锁成功。
+3.锁超时 （1）有一些锁的实现方式，会给加锁的过程设置超时时间。超过这个时间后，就会释放锁。
+（2）存在可能性：锁超时释放了锁，但线程并没有执行结束。此时，下一个线程获取到锁并且执行业务，则会导致上述的商品超卖问题。
+（3）因此，需要开发者对超时时长设置一个合理值，但更重要的，应改优化业务代码，保证加锁过程中的业务代码不要执行太长时间。
+（三）对同一个资源加锁 （1）并不是对所有操作都需要加锁，当资源发生竞争时，才需要加锁。例，有两个线程同时调用同一个接口来购买商品。但是，第一个线程购买的是商品A，第二个线程购买的是商品B，则不需要加锁，二者可并行执行。
+（2）此时，在代码层面加锁时，可以对一个业务数据唯一标识进行加锁。例，对商品id进行加锁。当多个线程购买同一个商品id时，才加锁排队执行。
+四、Mysql分布式锁 分布式的概念，这里不详细描述。
+仅简单介绍系统的单体部署和多个部署。
+（一）单体/多个部署 当系统使用量比较一般时，通常只部署一个SpringBoot应用即可。
+当系统客户较多，使用频繁时，可能需要部署多个SpringBoot应用，以保证系统性能及可用性。此时，大多配合Nginx来部署系统：
+如图，服务端多个部署的情况下，普通的锁（例，使用synchronized关键字修饰Java方法）都只是在各自的节点生效。
+例，当2个客户端同时购买同一个商品，但是请求经过Nginx后，被转发到第1个和第2个服务端节点，则此时的锁就做不到让这两个请求排队执行（因为两个应用的代码是独立的）。
+此时，就需要实现一个分布式锁。
+（二）Mysql分布式锁 分布式锁的实现方式有很多，这里仅介绍基于Mysql的分布式锁的简单实现。
+1.唯一索引（数据唯一性） （1）Mysql分布式锁的实现，可基于表的主键或者唯一索引，这里介绍使用唯一索引的方式。
+（2）在Mysql中使用唯一索引时，可以保证数据的唯一性。例，在表t_lock中，有字段lock_key，如果给这个字段设置了唯一索引，那么lock_key字段的值就不能重复（重复时无法保存）。
+（3）唯一索引的这一特性，可用于实现Mysql分布式锁。
+2.锁实现原理 （1）新建t_lock表，有一列：lock_key，且给列设置唯一索引。
+（2）加锁：往t_lock中插入一条数据，如果插入成功，则为加锁成功，反之则加锁失败。
+（3）解锁：根据lock_key删除t_lock表的数据，删除成功即为解锁成功。
+（4）例，同时有2个请求来更新【同一个用户】的账户余额：
+每个请求都要先获取锁（往t_lock表插入一条数据，用户id即为lock_key的值）。
+最先在t_lock中插入数据的请求（假设为A），即为加锁成功，可【持锁】继续处理后续业务。
+在A解锁之前，其它请求一直无法插入数据，也就是无法加锁成功，需等待解锁。
+A执行结束并解锁后，其它请求又可以尝试加锁。
+以此类推。
+3.锁的功能构成 （1）实现锁时，至少需要实现锁最基本的功能：加锁，解锁。
+（2）此外，可拓展实现的功能：多次尝试加锁，超时自动解锁。
+（3）多次尝试加锁
+重试次数：在加锁失败后，再继续尝试加锁，在总共尝试K次加锁失败后，结束线程的执行。
+重试间隔：每次重试需间隔一段时间。例，加锁失败后，等待5秒，再尝试下一次加锁。
+（4）超时自动解锁</description>
+    </item>
+    <item>
+      <title>IDEA 其它设置</title>
+      <link>https://wsc17.github.io/posts/idea/idea-other/</link>
+      <pubDate>Sun, 12 Nov 2023 12:20:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/idea/idea-other/</guid>
+      <description>IDEA其它设置 新建类时，自动生成作者注释：
+Setting → Editor → File and Code Templates，选择includes，设置模板，例
+/*** @author wushuchao*/ 关闭双击shift全局搜索：
+Setting → Advanced Settings → 搜索double → 找到shfit shift那里，取消勾选。</description>
+    </item>
+    <item>
+      <title>IDEA 卸载</title>
+      <link>https://wsc17.github.io/posts/idea/idea-uninstall/</link>
+      <pubDate>Sun, 12 Nov 2023 12:19:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/idea/idea-uninstall/</guid>
+      <description>卸载IDEA 本文介绍如何彻底卸载IDEA。
+控制面板，程序，卸载程序。
+注册表：使用快捷键Win + R，输入regedit，删除目录中idea相关文件：
+\HKEY_CURRENT_USER\SOFTWARE\JavaSoft\Prefs\jetbrains C:\用户${用户名称}\IdeaProjects\。
+C:\用户${用户名称}\AppData\Roaming\JetBrains。
+C:\用户${用户名称}\AppData\Local\JetBrains。
+C:\用户\公用.jetbrains。
+C:\Program Files\JetBrains。
+C:\ProgramData\Microsoft\Windows\Start Menu\Programs\JetBrains\。</description>
+    </item>
+    <item>
+      <title>IDEA 快捷键</title>
+      <link>https://wsc17.github.io/posts/idea/idea-key-map/</link>
+      <pubDate>Sun, 12 Nov 2023 12:16:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/idea/idea-key-map/</guid>
+      <description>IDEA快捷键 本文介绍：一些默认的快捷键、快捷键的修改、代码提示。
+在idea中快捷键设置中，找到（例，introduce Variable），即可修改生成返回值的快捷键设置。
+生成方法的返回值
+introduce Variable 复制行
+Duplicate Entire Lines 移动行
+Move Statement Up/Down 跳转到某行
+Go to Line/Column 全局搜索快捷键
+search everywhere ---------------&amp;gt; Ctrl + Shift + S 多行合并为一行
+Ctrl + Shift + j 回到顶部、底部
+Ctrl + Home Ctrl + End 增强for循环代码提示
+iter 删除无用导入
+Ctrl + Alt + O（这个是英文中的欧，不是数字零） 删除一行
+Delete Line </description>
+    </item>
+    <item>
+      <title>IDEA 插件</title>
+      <link>https://wsc17.github.io/posts/idea/idea-plugin/</link>
+      <pubDate>Sun, 12 Nov 2023 12:16:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/idea/idea-plugin/</guid>
+      <description>IDEA插件 mapper和xml跳转：Free Mybatis tool。
+生成方法注释：Easy javadoc。
+列出setter方法：GenerateAllSetter。</description>
+    </item>
+    <item>
+      <title>Hugo 文章中的配置</title>
+      <link>https://wsc17.github.io/posts/hugo/hugo-posts-config/</link>
+      <pubDate>Sat, 11 Nov 2023 22:21:51 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/hugo/hugo-posts-config/</guid>
+      <description>Hugo 文章中的配置 当使用hugo命令hugo new posts/xxx.md创建一篇博客时，在博客最顶部生成了一些配置项，本文简单介绍其作用。
+注，在使用配置项时，全小写字母即可。
+title title定义了文章的标题，它会显示在博客列表页中。
+slug 如果使用了slug，那么浏览器中博客的地址（默认是posts中markdown文件的名称），也将会使用slug配置值。
+date 配置博客的日期，（国内）默认格式示例：2023-11-11T21:26:30+08:00，其中【+08:00】表示这是一个北京时间。
+注：当这个时间是一个未来的日期时，博客有可能不会在页面上显示出来。
+draft 是否草稿。未进行其它配置的情况下，draft为true时，此博客不会在页面显示出来。
+description 博客描述。
+tags 博客标签。一篇博客可设置多个标签，列：
+tags: - blog - Hugo showlastmod 是否显示最新一次修改时间，为true时，必须配置lastMod配置项。
+lastmod 最新一次修改时间。注，这个配置与date配置不能完全相同。
+配置项toc 是否显示目录。注：需要hugo主题支持目录功能。
+scrolltotop 是否显示【回到顶部】按钮。</description>
+    </item>
+    <item>
+      <title>Hugo 主题Hermit-v2</title>
+      <link>https://wsc17.github.io/posts/hugo/hugo-theme-hermit-v2/</link>
+      <pubDate>Sat, 11 Nov 2023 21:50:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/hugo/hugo-theme-hermit-v2/</guid>
+      <description>HUGO主题Hermit-V2 本文介绍hugo所提供的主题：hermit-v2的简单使用。
+下载主题 可使用常见的2种方式下载主题：
+在cmd小黑框或者PowerShell中，使用cd命令进入站点根目录，执行命令：
+git submodule add https://github.com/1bl4z3r/hermit-V2 themes/hermit-v2 访问https://github.com/1bl4z3r/hermit-V2下载ZIP压缩包，解压后放到站点的themes文件夹下：
+// windows下，cmd小黑框中使用tree命令，可以显示文件夹结构 // windows下，cmd小黑框中使用tree &amp;gt; xxx.txt命令，保存文件夹结构 // themes文件夹目录结构（注意文件夹命名：hermit-v2，后续会用到） themes └─hermit-v2 ├─archetypes ├─assets │ ├─js │ │ └─mathjax │ └─scss ├─i18n ├─images └─layouts ├─partials ├─posts ├─shortcodes └─_default 使用主题 在hugo站点根目录下，编辑hugo.toml文件，添加配置即可：
+// 配置项的值，与站点theme文件夹下，主题的文件夹名称保持一致 theme = &amp;#39;hermit-v2&amp;#39; 简单修改配置 在hugo站点根目录下，编辑hugo.toml文件，可覆盖hermit-v2主题的配置项。
+站点图标 准备一个图标文件，例，https://www.iconfont.cn下载一个png图标，重命名为favicon.ico（包括文件后缀）。
+将图标文件放到站点static文件夹下即可：
+D:\noteTool\NoteWorkspace\blog\wuzuchaoblog\static\favicon.ico 主页菜单 示例：
+# 主页菜单 [menu] [[menu.main]] name = &amp;#34;文章&amp;#34; url = &amp;#34;posts/&amp;#34; weight = 10 [[menu.main]] name = &amp;#34;About&amp;#34; url = &amp;#34;about-hugo/&amp;#34; weight = 20 作者信息 示例：</description>
+    </item>
+    <item>
+      <title>Hugo 部署到Gitee</title>
+      <link>https://wsc17.github.io/posts/hugo/hugo-deploy-gitee/</link>
+      <pubDate>Fri, 10 Nov 2023 20:06:06 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/hugo/hugo-deploy-gitee/</guid>
+      <description>HUGO 部署到Gitee hugo官网：https://gohugo.io/。
+gitee官网：https://gitee.com/。
+创建Gitee仓库 在gitee登录，创建一个仓库，在此不再赘述。
+编译站点 在站点目录下，使用cmd小黑框或者PwoerShell，输入命令，将会生成public文件夹：
+hugo 推送本地HUGO站点到Gitee 这步涉及git使用，内容较为繁杂，这里仅介绍使用SourceTree工具的方式。
+SourceTree管理本地仓库 打开sourcetree，点击左上方加号打开一个新的tab面板。
+点击Add，选择hugo站点根目录，例：D:\blog\workspace\wushuchaoblog，点击添加。
+关联Gitee仓库 sourcetree右上方点击“远端”，弹窗中点击设置。
+在“远程仓库”下，点击添加：远端名称，勾选默认名称；输入gitee仓库URL，确定即可（首次操作时，需要输入gitee的账号和密码）。
+推送到Gitee仓库 首先拉取gitee仓库数据到本地：sourcetree点击拉取，选择要拉取的远端分支（如果没有点一下刷新）。
+提交本地文件：sourcetree左侧点击文件状态，未暂存模块点击暂存所有，然后点击提交。
+推送：sourcetree点击推送，勾选要推送的分支，点击推送。
+Gitee Pages服务 部署 使用Gitee Pages服务，部署站点到公网（首次使用需实名认证）。
+在Gitee仓库下，点击服务，选择Gitee Page服务。
+部署分支选择master即可。
+部署目录：如果将站点所有文件都推送到了Gitee，则输入public；否则视情况而定。
+可勾选强制使用https。
+点击启动，成功后点击页面提示的链接即可访问站点。
+更新 更新了博客文章时，需要在本地使用hugo命令重新编译，然后将变更提交到Gitee，然后在Gitee Pages服务中重新部署。</description>
+    </item>
+    <item>
+      <title>Hugo 入门</title>
+      <link>https://wsc17.github.io/posts/hugo/hugo-quickstart/</link>
+      <pubDate>Fri, 10 Nov 2023 14:26:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/hugo/hugo-quickstart/</guid>
+      <description>HUGO QuickStart hugo官网：https://gohugo.io/。
+Windows 11安装HUGO 官方安装指导：https://gohugo.io/installation/windows/#package-managers。
+安装hugo可使用三种方式，这里使用Winget的方式。
+安装Winget 访问 https://learn.microsoft.com/en-us/windows/package-manager/winget/#install-winget。
+点击get App Installer from the Microsoft Store，在跳转后的页面点击安装，在Microsoft Store中点击获取。
+查看是否安装成功：使用快捷键win + r，输入cmd打开小黑框，查看版本号：
+winget --verison 安装HUGO 安装winget后，在cmd小黑框中输入命令安装hugo扩展版：
+// 安装路径自行修改 winget install --location D:\blog\hugo\hugo_install Hugo.Hugo.Extended 未设置环境变量时，在小黑框使用cd命令进入hugo安装目录，输入命令查看版本号：
+.\hugo version 设置环境变量：将hugo安装目录添加到path。完成后，后续可在cmd小黑框中使用hugo命令（无需cd到hugo安装目录）：
+hugo version 安装PowerShell 简述 官方指导，windows下，使用PowerShell来操作hugo（非必须，cmd小黑框亦可）。
+注，此PowerShell，非彼PowerShell。
+参见：https://gohugo.io/getting-started/quick-start/#commands。
+可以通过Winget，或者迅雷下载来安装。
+使用Winget安装PowerShell 在cmd小黑框中，输入命令，获取PowerShell版本：
+winget search Microsoft.PowerShell // 输入 Y 同意条款后，输出结果 Name Id Version Source ----------------------------------------------------------------- PowerShell Microsoft.PowerShell 7.3.9.0 winget PowerShell Preview Microsoft.PowerShell.Preview 7.4.0.101 winget 输入命令安装：
+winget install --id Microsoft.</description>
+    </item>
+    <item>
+      <title></title>
+      <link>https://wsc17.github.io/posts/xxljob/xxl-job/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://wsc17.github.io/posts/xxljob/xxl-job/</guid>
+      <description>XXL-JOB 调度中心 提供管理端功能。
+提供调度功能。
+不承担业务逻辑。
+调度过程 以“手动执行一次”为例。
+任务查询 xxl_job_info表。
+执行一次 参数
+任务id
+执行类型枚举（例，手动执行）
+失败重试次数
+分片参数
+其它业务参数
+执行器地址集合
+代码顺序层级
+// 代码入口 JobTriggerPoolHelper.addTrigger(); // 上面这个方法内部，调用 XxlJobTrigger.trigger(); // 上面这个方法内部，调用 XxlJobScheduler.getExecutorBiz(address).run(triggerParam)； Java类api JobTriggerPoolHelper fastTriggerPool、slowTriggerPool 线程池，数据类型：java.util.concurrent.ThreadPoolExecutor。
+jobTimeoutCountMap 任务超时记录，数据类型：ConcurrentMap&amp;lt;Integer, AtomicInteger&amp;gt;；key-jobId，value-“同一个分钟数”内的超时次数。
+“同一个分钟数”，例：
+2023-10-01 12:24:53与2023-10-01 12:24:55，属于“同一个分钟数”。
+2023-10-01 12:24:53与2023-10-01 12:32:55，则不属于“同一个分钟数”。
+Java层面，使用System.currentTimeMillis() / 60000计算（同一个分钟数内的毫秒值，得到的值是一样的）。
+addTrigger() 根据超时次数，获取线程池。
+默认为fastTriggerPool，假如该任务总超时次数，达到限制次数，则取slowTriggerPool。
+执行线程池，在线程中调用XxlJobTrigger.trigger();
+判断当前分钟数是否变化，变化则清空jobTimeoutCountMap。
+任务执行时间超过一定值，则认为任务执行超时，累加jobTimeoutCountMap中该任务的超时次数。
+XxlJobTrigger trigger() 处理任务信息
+查询任务。
+确认失败重试次数：参数传入则取之，反之取数据库中的值。
+处理执行器信息
+查询执行器。
+确认地址集合：参数传入则取之，反之取数据库中的值。
+分片参数（index/total）处理
+index：当前分片序号(从0开始)，执行器集群列表中当前执行器的序号。 total：总分片数，执行器集群的总机器数量。
+执行processTrigger()，若满足条件：任务执行策略为“分片广播” - 有效的分片参数 - 有效的地址集合，则分片执行。
+​ $\textcolor{red}{TODO：怎么实现每个执行器都执行？每个执行器执行一部分任务？} $
+processTrigger() 保存日志JobLog。</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>git on Wushuchao | Blog</title>
+    <link>https://wsc17.github.io/tags/git/</link>
+    <description>Recent content in git on Wushuchao | Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 16 Nov 2023 17:16:25 +0800</lastBuildDate>
+    <atom:link href="https://wsc17.github.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Git 简单命令</title>
+      <link>https://wsc17.github.io/posts/git/git-simple/</link>
+      <pubDate>Thu, 16 Nov 2023 17:16:25 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/git/git-simple/</guid>
+      <description>Git命令简单使用 本文仅介绍几个最简单的Git命令使用。
+对普通开发工程师，更多复杂的命令，建议使用可视化工具（例，sourcetree）来处理。
+对版本控制工具的使用，最好保持其最基础的使用，尽量不要太过复杂的操作，防止事故。
+本地仓库 名称和邮箱
+// 配置用户git config --global user.name xxx// 配置邮箱git config --global user.email xxx// 查看用户git config user.name// 查看邮箱git config user.email 仓库
+// 在本地创建一个git仓库// 纯本地操作，无关远程仓库git init 远程仓库 关联远程仓库
+// 本地创建了仓库的情况下，将本地仓库与远程仓库关联git remote add origin https://xxxx/xxx.git// 查看远程库信息git remote -v// 删除本地仓库与远程仓库的关联git remote rm origin 克隆远程仓库
+// 此操作不需要在本地创建本地仓库git clone xxx </description>
+    </item>
+  </channel>
+</rss>

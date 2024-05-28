@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>theme on Wushuchao | Blog</title>
+    <link>https://wsc17.github.io/tags/theme/</link>
+    <description>Recent content in theme on Wushuchao | Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 11 Nov 2023 21:50:30 +0800</lastBuildDate>
+    <atom:link href="https://wsc17.github.io/tags/theme/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hugo 主题Hermit-v2</title>
+      <link>https://wsc17.github.io/posts/hugo/hugo-theme-hermit-v2/</link>
+      <pubDate>Sat, 11 Nov 2023 21:50:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/hugo/hugo-theme-hermit-v2/</guid>
+      <description>HUGO主题Hermit-V2 本文介绍hugo所提供的主题：hermit-v2的简单使用。
+下载主题 可使用常见的2种方式下载主题：
+在cmd小黑框或者PowerShell中，使用cd命令进入站点根目录，执行命令：
+git submodule add https://github.com/1bl4z3r/hermit-V2 themes/hermit-v2 访问https://github.com/1bl4z3r/hermit-V2下载ZIP压缩包，解压后放到站点的themes文件夹下：
+// windows下，cmd小黑框中使用tree命令，可以显示文件夹结构 // windows下，cmd小黑框中使用tree &amp;gt; xxx.txt命令，保存文件夹结构 // themes文件夹目录结构（注意文件夹命名：hermit-v2，后续会用到） themes └─hermit-v2 ├─archetypes ├─assets │ ├─js │ │ └─mathjax │ └─scss ├─i18n ├─images └─layouts ├─partials ├─posts ├─shortcodes └─_default 使用主题 在hugo站点根目录下，编辑hugo.toml文件，添加配置即可：
+// 配置项的值，与站点theme文件夹下，主题的文件夹名称保持一致 theme = &amp;#39;hermit-v2&amp;#39; 简单修改配置 在hugo站点根目录下，编辑hugo.toml文件，可覆盖hermit-v2主题的配置项。
+站点图标 准备一个图标文件，例，https://www.iconfont.cn下载一个png图标，重命名为favicon.ico（包括文件后缀）。
+将图标文件放到站点static文件夹下即可：
+D:\noteTool\NoteWorkspace\blog\wuzuchaoblog\static\favicon.ico 主页菜单 示例：
+# 主页菜单 [menu] [[menu.main]] name = &amp;#34;文章&amp;#34; url = &amp;#34;posts/&amp;#34; weight = 10 [[menu.main]] name = &amp;#34;About&amp;#34; url = &amp;#34;about-hugo/&amp;#34; weight = 20 作者信息 示例：</description>
+    </item>
+  </channel>
+</rss>

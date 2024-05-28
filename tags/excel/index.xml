@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>excel on Wushuchao | Blog</title>
+    <link>https://wsc17.github.io/tags/excel/</link>
+    <description>Recent content in excel on Wushuchao | Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 24 May 2024 16:36:15 +0800</lastBuildDate>
+    <atom:link href="https://wsc17.github.io/tags/excel/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Excel导入</title>
+      <link>https://wsc17.github.io/posts/excel/excel-import/</link>
+      <pubDate>Fri, 24 May 2024 16:36:15 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/excel/excel-import/</guid>
+      <description>一、本文内容概述 介绍Excel导入时，涉及的功能要点。
+二、重点功能 （一）异步读取文件 （1）当文件内数据量较大时，如果文件读取同步执行，可能会出现文件读取时间较长，导致响应前端慢，页面长时间得不到响应而卡住，影响用户体验。
+（2）此时可将文件读取使用异步的方式来处理：服务端接收到文件后，就给前端响应（文件上传成功，数据处理中），然后另起一个线程来读取文件数据入库。
+（二）导入记录功能 （1）异步读取的方式，用户并不知道文件最终是否读取成功。
+（2）此时，需要一个导入记录的功能。服务端接收到文件后，保存一条数据到导入记录表（状态为处理中），然后给前端响应。另起一个线程读取文件，结束后更新导入记录表状态（成功、失败）。
+（3）前端做一个导入记录查询的页面，让用户查询每次导入记录的结果。
+（三）支持重复导入 （1）由于用户操作是不可控的，可能出现同一个文件被重复导入多次，造成数据重复。
+（2）服务端需要支持重复导入：数据入库前，先删除原有数据（根据业务上的数据唯一标识），然后再保存新的数据。
+（四）分批次读取和保存 （1）读取文件内容时，需要将读取出来的数据暂放至内存。如果数据量较大，可能导致内存溢出（内存空间不够大，不足以保存那么多的数据，尤其Excel容易出现）。
+（2）逐行读取：此时，可对文件内容进行逐行读取，每次只读取1行到内存（Excel逐行读取，可使用EasyExcel工具，开源的）。
+（3）分批保存：例，内存中每存了500条数据，就保存一次数据库，并清空内存，避免内存中的数据持续累积。
+（五）数据库事务 无论是重复导入，还是分批次读取保存，都涉及数据的前后操作。此时，必须合理使用数据库事务，避免数据异常、杂乱。
+三、流程示例 </description>
+    </item>
+  </channel>
+</rss>

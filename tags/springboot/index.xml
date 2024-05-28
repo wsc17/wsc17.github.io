@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>springBoot on Wushuchao | Blog</title>
+    <link>https://wsc17.github.io/tags/springboot/</link>
+    <description>Recent content in springBoot on Wushuchao | Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 16 Nov 2023 17:45:15 +0800</lastBuildDate>
+    <atom:link href="https://wsc17.github.io/tags/springboot/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>SpringBoot 小Tips</title>
+      <link>https://wsc17.github.io/posts/springboot/spring-boot-tips/</link>
+      <pubDate>Thu, 16 Nov 2023 17:45:15 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/springboot/spring-boot-tips/</guid>
+      <description>SpringBoot Tips 多maven模块项目下，全局异常拦截（使用@RestControllerAdvice注解）不生效
+方法一：保证全局处理类，与应用启动类（@SpringBootApplication标识的类），位于同级包下、或者其子包下。
+方法二：在项目启动类注解添加包扫描路径，例：
+@SpringBootApplication(scanBasePackages=&amp;#34;com.xxx.xxx&amp;#34;) 在Controller中重定向
+类上使用@Controller 注解时
+return &amp;#34;redirect:&amp;#34; + xxx; 类上使用@RestController注解时
+response.sendRedirect(&amp;#34;xxx&amp;#34;); 事务失效的场景（仅列举常见的情况）
+方法必须是public修饰，事务才生效。
+final修饰的方法，事务无效。
+static修饰的方法，事务无效。
+在某个类中的方法（无事务）中，调用该类的另一个方法（有事务），会导致事务失效。
+某个类没有被spring管理，在该类中使用事务无效。
+在方法中创建一个新的线程去执行事务方法，无效（这样会导致两个方法不在同一个线程中，获取到的数据库连接不一样，从而是两个不同的事务）。
+代码中把异常吃了，然后又不抛出来，事务也不会回滚（相当于没有发生异常）。
+rollbackFor参数设置的异常范围过小（例，业务自定义的BusinessException等）。</description>
+    </item>
+  </channel>
+</rss>

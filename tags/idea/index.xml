@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>idea on Wushuchao | Blog</title>
+    <link>https://wsc17.github.io/tags/idea/</link>
+    <description>Recent content in idea on Wushuchao | Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 12 Nov 2023 12:20:30 +0800</lastBuildDate>
+    <atom:link href="https://wsc17.github.io/tags/idea/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IDEA 其它设置</title>
+      <link>https://wsc17.github.io/posts/idea/idea-other/</link>
+      <pubDate>Sun, 12 Nov 2023 12:20:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/idea/idea-other/</guid>
+      <description>IDEA其它设置 新建类时，自动生成作者注释：
+Setting → Editor → File and Code Templates，选择includes，设置模板，例
+/*** @author wushuchao*/ 关闭双击shift全局搜索：
+Setting → Advanced Settings → 搜索double → 找到shfit shift那里，取消勾选。</description>
+    </item>
+    <item>
+      <title>IDEA 卸载</title>
+      <link>https://wsc17.github.io/posts/idea/idea-uninstall/</link>
+      <pubDate>Sun, 12 Nov 2023 12:19:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/idea/idea-uninstall/</guid>
+      <description>卸载IDEA 本文介绍如何彻底卸载IDEA。
+控制面板，程序，卸载程序。
+注册表：使用快捷键Win + R，输入regedit，删除目录中idea相关文件：
+\HKEY_CURRENT_USER\SOFTWARE\JavaSoft\Prefs\jetbrains C:\用户${用户名称}\IdeaProjects\。
+C:\用户${用户名称}\AppData\Roaming\JetBrains。
+C:\用户${用户名称}\AppData\Local\JetBrains。
+C:\用户\公用.jetbrains。
+C:\Program Files\JetBrains。
+C:\ProgramData\Microsoft\Windows\Start Menu\Programs\JetBrains\。</description>
+    </item>
+    <item>
+      <title>IDEA 快捷键</title>
+      <link>https://wsc17.github.io/posts/idea/idea-key-map/</link>
+      <pubDate>Sun, 12 Nov 2023 12:16:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/idea/idea-key-map/</guid>
+      <description>IDEA快捷键 本文介绍：一些默认的快捷键、快捷键的修改、代码提示。
+在idea中快捷键设置中，找到（例，introduce Variable），即可修改生成返回值的快捷键设置。
+生成方法的返回值
+introduce Variable 复制行
+Duplicate Entire Lines 移动行
+Move Statement Up/Down 跳转到某行
+Go to Line/Column 全局搜索快捷键
+search everywhere ---------------&amp;gt; Ctrl + Shift + S 多行合并为一行
+Ctrl + Shift + j 回到顶部、底部
+Ctrl + Home Ctrl + End 增强for循环代码提示
+iter 删除无用导入
+Ctrl + Alt + O（这个是英文中的欧，不是数字零） 删除一行
+Delete Line </description>
+    </item>
+    <item>
+      <title>IDEA 插件</title>
+      <link>https://wsc17.github.io/posts/idea/idea-plugin/</link>
+      <pubDate>Sun, 12 Nov 2023 12:16:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/idea/idea-plugin/</guid>
+      <description>IDEA插件 mapper和xml跳转：Free Mybatis tool。
+生成方法注释：Easy javadoc。
+列出setter方法：GenerateAllSetter。</description>
+    </item>
+  </channel>
+</rss>

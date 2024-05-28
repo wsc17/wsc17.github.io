@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>plugin on Wushuchao | Blog</title>
+    <link>https://wsc17.github.io/tags/plugin/</link>
+    <description>Recent content in plugin on Wushuchao | Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 12 Nov 2023 12:16:30 +0800</lastBuildDate>
+    <atom:link href="https://wsc17.github.io/tags/plugin/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IDEA 插件</title>
+      <link>https://wsc17.github.io/posts/idea/idea-plugin/</link>
+      <pubDate>Sun, 12 Nov 2023 12:16:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/idea/idea-plugin/</guid>
+      <description>IDEA插件 mapper和xml跳转：Free Mybatis tool。
+生成方法注释：Easy javadoc。
+列出setter方法：GenerateAllSetter。</description>
+    </item>
+  </channel>
+</rss>

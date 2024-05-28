@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gitee on Wushuchao | Blog</title>
+    <link>https://wsc17.github.io/tags/gitee/</link>
+    <description>Recent content in gitee on Wushuchao | Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 10 Nov 2023 20:06:06 +0800</lastBuildDate>
+    <atom:link href="https://wsc17.github.io/tags/gitee/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hugo 部署到Gitee</title>
+      <link>https://wsc17.github.io/posts/hugo/hugo-deploy-gitee/</link>
+      <pubDate>Fri, 10 Nov 2023 20:06:06 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/hugo/hugo-deploy-gitee/</guid>
+      <description>HUGO 部署到Gitee hugo官网：https://gohugo.io/。
+gitee官网：https://gitee.com/。
+创建Gitee仓库 在gitee登录，创建一个仓库，在此不再赘述。
+编译站点 在站点目录下，使用cmd小黑框或者PwoerShell，输入命令，将会生成public文件夹：
+hugo 推送本地HUGO站点到Gitee 这步涉及git使用，内容较为繁杂，这里仅介绍使用SourceTree工具的方式。
+SourceTree管理本地仓库 打开sourcetree，点击左上方加号打开一个新的tab面板。
+点击Add，选择hugo站点根目录，例：D:\blog\workspace\wushuchaoblog，点击添加。
+关联Gitee仓库 sourcetree右上方点击“远端”，弹窗中点击设置。
+在“远程仓库”下，点击添加：远端名称，勾选默认名称；输入gitee仓库URL，确定即可（首次操作时，需要输入gitee的账号和密码）。
+推送到Gitee仓库 首先拉取gitee仓库数据到本地：sourcetree点击拉取，选择要拉取的远端分支（如果没有点一下刷新）。
+提交本地文件：sourcetree左侧点击文件状态，未暂存模块点击暂存所有，然后点击提交。
+推送：sourcetree点击推送，勾选要推送的分支，点击推送。
+Gitee Pages服务 部署 使用Gitee Pages服务，部署站点到公网（首次使用需实名认证）。
+在Gitee仓库下，点击服务，选择Gitee Page服务。
+部署分支选择master即可。
+部署目录：如果将站点所有文件都推送到了Gitee，则输入public；否则视情况而定。
+可勾选强制使用https。
+点击启动，成功后点击页面提示的链接即可访问站点。
+更新 更新了博客文章时，需要在本地使用hugo命令重新编译，然后将变更提交到Gitee，然后在Gitee Pages服务中重新部署。</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>uninstall on Wushuchao | Blog</title>
+    <link>https://wsc17.github.io/tags/uninstall/</link>
+    <description>Recent content in uninstall on Wushuchao | Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 12 Nov 2023 12:19:30 +0800</lastBuildDate>
+    <atom:link href="https://wsc17.github.io/tags/uninstall/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IDEA 卸载</title>
+      <link>https://wsc17.github.io/posts/idea/idea-uninstall/</link>
+      <pubDate>Sun, 12 Nov 2023 12:19:30 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/idea/idea-uninstall/</guid>
+      <description>卸载IDEA 本文介绍如何彻底卸载IDEA。
+控制面板，程序，卸载程序。
+注册表：使用快捷键Win + R，输入regedit，删除目录中idea相关文件：
+\HKEY_CURRENT_USER\SOFTWARE\JavaSoft\Prefs\jetbrains C:\用户${用户名称}\IdeaProjects\。
+C:\用户${用户名称}\AppData\Roaming\JetBrains。
+C:\用户${用户名称}\AppData\Local\JetBrains。
+C:\用户\公用.jetbrains。
+C:\Program Files\JetBrains。
+C:\ProgramData\Microsoft\Windows\Start Menu\Programs\JetBrains\。</description>
+    </item>
+  </channel>
+</rss>

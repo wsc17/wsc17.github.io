@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>config on Wushuchao | Blog</title>
+    <link>https://wsc17.github.io/tags/config/</link>
+    <description>Recent content in config on Wushuchao | Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 11 Nov 2023 22:21:51 +0800</lastBuildDate>
+    <atom:link href="https://wsc17.github.io/tags/config/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hugo 文章中的配置</title>
+      <link>https://wsc17.github.io/posts/hugo/hugo-posts-config/</link>
+      <pubDate>Sat, 11 Nov 2023 22:21:51 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/hugo/hugo-posts-config/</guid>
+      <description>Hugo 文章中的配置 当使用hugo命令hugo new posts/xxx.md创建一篇博客时，在博客最顶部生成了一些配置项，本文简单介绍其作用。
+注，在使用配置项时，全小写字母即可。
+title title定义了文章的标题，它会显示在博客列表页中。
+slug 如果使用了slug，那么浏览器中博客的地址（默认是posts中markdown文件的名称），也将会使用slug配置值。
+date 配置博客的日期，（国内）默认格式示例：2023-11-11T21:26:30+08:00，其中【+08:00】表示这是一个北京时间。
+注：当这个时间是一个未来的日期时，博客有可能不会在页面上显示出来。
+draft 是否草稿。未进行其它配置的情况下，draft为true时，此博客不会在页面显示出来。
+description 博客描述。
+tags 博客标签。一篇博客可设置多个标签，列：
+tags: - blog - Hugo showlastmod 是否显示最新一次修改时间，为true时，必须配置lastMod配置项。
+lastmod 最新一次修改时间。注，这个配置与date配置不能完全相同。
+配置项toc 是否显示目录。注：需要hugo主题支持目录功能。
+scrolltotop 是否显示【回到顶部】按钮。</description>
+    </item>
+  </channel>
+</rss>
