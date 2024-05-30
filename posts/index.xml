@@ -26,7 +26,8 @@
 （2）逐行读取：此时，可对文件内容进行逐行读取，每次只读取1行到内存（Excel逐行读取，可使用EasyExcel工具，开源的）。
 （3）分批保存：例，内存中每存了500条数据，就保存一次数据库，并清空内存，避免内存中的数据持续累积。
 （五）数据库事务 无论是重复导入，还是分批次读取保存，都涉及数据的前后操作。此时，必须合理使用数据库事务，避免数据异常、杂乱。
-三、流程示例 </description>
+三、流程示例 四、代码示例 作者自己写了一个较为通用的excel导入功能，可参考使用：
+https://gitee.com/wuzuchao/maitang </description>
 			<content type="html"><![CDATA[<h2 id="一本文内容概述">一、本文内容概述</h2>
 <p>介绍Excel导入时，涉及的功能要点。</p>
 <h2 id="二重点功能">二、重点功能</h2>
@@ -49,7 +50,10 @@
 <p>无论是重复导入，还是分批次读取保存，都涉及数据的前后操作。此时，必须合理使用数据库事务，避免数据异常、杂乱。</p>
 <h2 id="三流程示例">三、流程示例</h2>
 <p><img src="/img/excel/EXCEL_READ_FLOW.jpg" alt="示例图片"></p>
-]]></content>
+<h2 id="四代码示例">四、代码示例</h2>
+<p>作者自己写了一个较为通用的excel导入功能，可参考使用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-http" data-lang="http"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">https://gitee.com/wuzuchao/maitang
+</span></span></span></code></pre></div>]]></content>
 		</item>
 		
 		<item>
