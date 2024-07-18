@@ -2,17 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://wsc17.github.io/tags/excel/</loc>
-    <lastmod>2024-05-24T17:09:15+08:00</lastmod>
-  </url><url>
-    <loc>https://wsc17.github.io/posts/excel/excel-import/</loc>
-    <lastmod>2024-05-24T17:09:15+08:00</lastmod>
-  </url><url>
     <loc>https://wsc17.github.io/posts/</loc>
-    <lastmod>2024-05-29T09:52:45+08:00</lastmod>
+    <lastmod>2024-07-18T18:01:15+08:00</lastmod>
   </url><url>
     <loc>https://wsc17.github.io/tags/</loc>
-    <lastmod>2024-05-29T09:52:45+08:00</lastmod>
+    <lastmod>2024-07-18T18:01:15+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
@@ -29,8 +23,11 @@
                 href="https://wsc17.github.io/tags/"
                 />
   </url><url>
+    <loc>https://wsc17.github.io/tags/wow/</loc>
+    <lastmod>2024-07-18T18:01:15+08:00</lastmod>
+  </url><url>
     <loc>https://wsc17.github.io/</loc>
-    <lastmod>2024-05-29T09:52:45+08:00</lastmod>
+    <lastmod>2024-07-18T18:01:15+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
@@ -46,6 +43,15 @@
                 hreflang="en-us"
                 href="https://wsc17.github.io/"
                 />
+  </url><url>
+    <loc>https://wsc17.github.io/posts/wow/wow/</loc>
+    <lastmod>2024-07-18T18:01:15+08:00</lastmod>
+  </url><url>
+    <loc>https://wsc17.github.io/tags/excel/</loc>
+    <lastmod>2024-05-24T17:09:15+08:00</lastmod>
+  </url><url>
+    <loc>https://wsc17.github.io/posts/excel/excel-import/</loc>
+    <lastmod>2024-05-24T17:09:15+08:00</lastmod>
   </url><url>
     <loc>https://wsc17.github.io/tags/java/</loc>
     <lastmod>2023-11-20T16:46:22+08:00</lastmod>

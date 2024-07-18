@@ -18,8 +18,7 @@
 对版本控制工具的使用，最好保持其最基础的使用，尽量不要太过复杂的操作，防止事故。
 二、本地仓库 名称和邮箱
 // 配置用户git config --global user.name xxx// 配置邮箱git config --global user.email xxx// 查看用户git config user.name// 查看邮箱git config user.email 本地仓库
-// 0.在本地创建一个git仓库（纯本地操作，无关远程仓库）git init// 1.将文件提交至暂存区（所有未暂存的文件）git add .// 2.提交暂存区的文件git commin -m &amp;#34;提交备注&amp;#34; 三、远程仓库 关联远程仓库
-// 本地创建了仓库的情况下，将本地仓库与远程仓库关联git remote add origin https://xxxx/xxx.git// 查看远程库信息git remote -v// 删除本地仓库与远程仓库的关联git remote rm origin// 本地库初始关联远程库时，更新文件，要指定分支git pull origin master// 本地库与远程库关联后，提交至远程库（这一步成功后，后续更新，只需git pull即可）git push -u origin master 克隆远程仓库</description>
+// 0.在本地创建一个git仓库（纯本地操作，无关远程仓库）git init// 1.将文件提交至暂存区（所有未暂存的文件）git add .// 2.提交暂存区的文件git commin -m &amp;#34;提交备注&amp;#34; ## 三、远程仓库1. 关联远程仓库```git// 本地创建了仓库的情况下，将本地仓库与远程仓库关联git remote add origin https://xxxx/xxx.git// 查看远程库信息git remote -v// 删除本地仓库与远程仓库的关联git remote rm origin// 本地库初始关联远程库时，更新文件，要指定分支git pull origin master// 本地库与远程库关联后，提交至远程库（这一步成功后，后续更新，只需git pull即可）git push -u origin master 克隆远程仓库</description>
     </item>
   </channel>
 </rss>
