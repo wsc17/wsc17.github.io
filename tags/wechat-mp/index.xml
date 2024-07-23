@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>wechat-mp on Wushuchao | Blog</title>
+    <link>https://wsc17.github.io/tags/wechat-mp/</link>
+    <description>Recent content in wechat-mp on Wushuchao | Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 23 Jul 2024 10:36:52 +0800</lastBuildDate>
+    <atom:link href="https://wsc17.github.io/tags/wechat-mp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>微信公众号开发入门</title>
+      <link>https://wsc17.github.io/posts/wechat/wechat-mp/</link>
+      <pubDate>Tue, 23 Jul 2024 10:36:52 +0800</pubDate>
+      <guid>https://wsc17.github.io/posts/wechat/wechat-mp/</guid>
+      <description>一、什么是微信开发者 微信是什么，应该不用多说。
+而微信开发者，指的是需要借助微信，来达到某些目的的人。
+例，某公司需要开发一套公众号景区售票系统，让游客可以在微信公众号上来进行购票。此时，该公司或者公司的软件开发人员，即为微信开发者。
+二、微信开放平台 微信开放平台，是微信提供给开发者的开发帮助平台。
+开发者可以在该平台上查阅相关资料，了解微信提供了哪些服务（例，服务号、订阅号、小程序），以及如何使用这些服务。
+开放平台地址：https://mp.weixin.qq.com。
+三、openId openId是指，用户在某个微信应用/服务下的唯一标识。
+用户在不同的微信应用/服务下，会有不同的openId。
+openId的唯一：微信应用/服务 + 用户。
+即，每个用户在不同的微信应用/服务下，会有一个唯一标识。
+微信开发者可以借助openId，来实现很多的业务功能。
+四、公众号开发 （一）注册公众号 用户需要申请微信公众号，并进行认证等操作，才能正常使用公众号的功能。
+（二）公众号服务 微信公众号，主要提供两大类服务：消息会话和公众号内网页。
+（三）配置自定义菜单 通过配置自定义菜单，以公众号菜单为入口，实现用户在公众号内访问业务系统的页面。
+公众号管理员登录微信公众平台（公众号）。
+找到【内容与互动-自定义菜单】，即可添加菜单（发送消息、跳转网页、跳转小程序）。
+注：跳转网页的菜单，需要已认证的公众号才能随意添加外链。
+（四）消息会话 公众号是以微信用户的一个联系人形式存在的，用户可以跟公众号进行消息会话。
+例，用户给公众号发送某个关键词，公众号会回复某些信息。
+主要类型有：
+群发消息
+被动回复
+客服消息
+模板消息。例，购票成功后，发送一条消息给用户，展示购票时间、金额等相关信息（通过定制消息模板的方式）。
+（五）公众号内网页 当需要通过公众号进入某些系统自定义的页面时，就需要使用公众号内网页功能。
+例，用户通过点击公众号的购票菜单，进入购票页面。
+（1）网页授权 网页授权，是用户进入公众号内网页的第一个步骤，可以在这个步骤中，获取到用户信息。
+网页授权分为：静默授权和非静默授权。
+静默授权：用户对授权无感知，不需要操作什么。这种方式只能获取到openId，无法获取用户的其它信息。
+非静默授权：会弹出授权确认框，用户点击同意后，才能获取用户信息。这种方式能够获取到openId及用户的一些其它信息。
+网页授权结合业务系统，常规流程为：
+用户点击菜单，访问业务系统后端接口（officialAccountsAuth）。
+业务系统后端在officialAccountsAuth接口中，构建重定向链接，跳转到网页授权（静默/非静默）界面。
+用户同意授权后，将能够获取到微信code参数，然后继续访问业务系统另一个后端接口（getOpenId）。
+业务系统后端在getOpenId接口中，使用code参数获取用户信息（比如openId），根据需要构建用户登录信息，然后携带登录信息重定向到业务系统页面（比如首页）。
+（2）业务流程 管理员在微信公众号管理后台，配置一个自定义菜单。
+菜单类型为跳转网页，网页链接设置为：业务系统的一个后端接口。
+例，接口名称为officialAccountsAuth：
+// 1、菜单的网页链接示例（用户点击菜单后，将访问这个地址） https://maitang.com/officialAccountsAuth?returnUrl=https://maitang.com/webpage/aaa-h5 // 2、https://maitang.com/officialAccountsAuth，这是一个业务系统的后端接口 // 3、returnUrl=https://maitang.com/webpage/aaa-H5，在网页授权流程全部完成后，最终将要跳转的地址（比如业务系统的首页） 后端在officialAccountsAuth接口中，构建一个重定向链接。
+目的是为了触发用户授权，并获取一个微信的code参数：
+// 1、构建的重定向链接示例 https://open.weixin.qq.com/connect/oauth2/authorize?appid=abcdefghijklmn&amp;amp;redirect_uri=http%3A%2F%2F138.38.38.38%2Fapi%2Fc%2Foperation%2FbizWechat%2FgetOpenId&amp;amp;response_type=code&amp;amp;scope=snsapi_base&amp;amp;state=http%3A%2F%2F4maitang.com%2Faaa-h5&amp;amp;connect_redirect=1#wechat_redirect // a、appid：微信公众号的唯一标识 // b、redirect_uri：用户授权完成后，后续将要跳转的地址。 // 这个地址也是一个业务系统后端接口（getOpenId），详情看下文 // c、scope：静默/非静默授权，值为snsapi_base时表示静默授权 // d、state：上文第2个步骤，officialAccountsAuth接口的入参 // e、其它参数：固定的 // 参考：后端重定向示例（Controller层代码，使用@RestController注解时） response.</description>
+    </item>
+  </channel>
+</rss>

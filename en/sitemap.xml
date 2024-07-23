@@ -2,11 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://wsc17.github.io/tags/openid/</loc>
+    <lastmod>2024-07-23T16:55:02+08:00</lastmod>
+  </url><url>
     <loc>https://wsc17.github.io/posts/</loc>
-    <lastmod>2024-07-23T10:17:50+08:00</lastmod>
+    <lastmod>2024-07-23T16:55:02+08:00</lastmod>
   </url><url>
     <loc>https://wsc17.github.io/tags/</loc>
-    <lastmod>2024-07-23T10:17:50+08:00</lastmod>
+    <lastmod>2024-07-23T16:55:02+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
@@ -23,11 +26,14 @@
                 href="https://wsc17.github.io/tags/"
                 />
   </url><url>
-    <loc>https://wsc17.github.io/tags/wow/</loc>
-    <lastmod>2024-07-23T10:17:50+08:00</lastmod>
+    <loc>https://wsc17.github.io/tags/token/</loc>
+    <lastmod>2024-07-23T16:55:02+08:00</lastmod>
+  </url><url>
+    <loc>https://wsc17.github.io/tags/wechat-mp/</loc>
+    <lastmod>2024-07-23T16:55:02+08:00</lastmod>
   </url><url>
     <loc>https://wsc17.github.io/</loc>
-    <lastmod>2024-07-23T10:17:50+08:00</lastmod>
+    <lastmod>2024-07-23T16:55:02+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="fr"
@@ -43,6 +49,12 @@
                 hreflang="en-us"
                 href="https://wsc17.github.io/"
                 />
+  </url><url>
+    <loc>https://wsc17.github.io/posts/wechat/wechat-mp/</loc>
+    <lastmod>2024-07-23T16:55:02+08:00</lastmod>
+  </url><url>
+    <loc>https://wsc17.github.io/tags/wow/</loc>
+    <lastmod>2024-07-23T10:17:50+08:00</lastmod>
   </url><url>
     <loc>https://wsc17.github.io/posts/wow/wow/</loc>
     <lastmod>2024-07-23T10:17:50+08:00</lastmod>
