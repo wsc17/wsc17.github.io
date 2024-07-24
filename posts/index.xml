@@ -198,6 +198,18 @@ openId的唯一：微信应用/服务 + 用户。
 </ul>
 </li>
 </ol>
+<h1 id="五开发工具">五、开发工具</h1>
+<p>开发者自己对接微信接口会比较麻烦，推荐使用WxJava工具。</p>
+<p>工具对微信接口进行了封装，开发者只需一行代码，即可完成获取accessToken、openId等操作。</p>
+<p>工具地址</p>
+<ul>
+<li>
+<p><code>https://gitee.com/binary/weixin-java-tools</code>。</p>
+</li>
+<li>
+<p><code>https://github.com/wechat-group/WxJava</code>。</p>
+</li>
+</ul>
 ]]></content>
 		</item>
 		
